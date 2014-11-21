@@ -10,18 +10,29 @@ function start() {
 			console.log('favicon requested');
 			return;
 		}
-		
+
+		request.on('data', function(chunk) {
+			console.log('BODY: ' + chunk);// POST data ?
+		});
 		
 		var pathname = url.parse(request.url).pathname;
-		
+
 		console.log("Request received\t" + pathname);
-		response.writeHead(200);
+		response.writeHead(200, {"Content-Type": "text/html"});
 		response.write('Node works!');
 		response.end();
 	}
+	
+	
 
 	var server = http.createServer(onRequest);
 	server.listen(8888); // alt: listen(1337, '127.0.0.1');
+	
+	// server.once --> one time listener
+	server.on('connection', function(stream) {
+		console.log('someone connected!');
+	});
+	
 	console.log("Server started.");
 }
 
